@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>パスワード自動生成ツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select, input[type="number"] {
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .password-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            display: inline-block; /* パスワードボックスを横並びに表示 */
+            white-space: nowrap; /* 長いテキストが改行されないようにする */
+            overflow: auto; /* テキストがウィンドウからはみ出た場合にスクロールバーを表示 */
+            font-size: 18px;
+        }
+    </style>
+    <script>
+        function generatePassword() {
+            const length = parseInt(document.getElementById("length").value, 10);
+            const count = parseInt(document.getElementById("count").value, 10);
+            const charset = document.getElementById("charset").value;
+
+            const passwordList = document.getElementById("passwordList");
+            passwordList.innerHTML = ""; // 以前の結果をクリア
+
+            for (let i = 0; i < count; i++) {
+                const password = generateRandomPassword(length, charset);
+                const passwordBox = document.createElement("div"); // パスワードを囲むdiv要素
+                passwordBox.classList.add("password-box"); // クラスを追加
+                passwordBox.textContent = password;
+                passwordList.appendChild(passwordBox);
+            }
+        }
+
+        function generateRandomPassword(length, charset) {
+            const characters = (charset === "1") ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?/{}[]|';
+            let password = '';
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                password += characters.charAt(randomIndex);
+            }
+
+            return password;
+        }
+    </script>
+</head>
+<body>
+    <h1>パスワード自動生成ツール</h1>
+    <form>
+        <label for="length">文字数（1から50の範囲）:</label>
+        <input type="number" id="length" min="1" max="50" required><br>
+        
+        <label for="count">生成数（1から10の範囲）:</label>
+        <input type="number" id="count" min="1" max="10" required><br>
+        
+        <label for="charset">文字セット:</label>
+        <select id="charset">
+            <option value="1">英数字のみ</option>
+            <option value="2">特殊文字含む</option>
+        </select><br>
+        
+        <button type="button" onclick="generatePassword()">生成</button>
+    </form>
+
+    <div id="passwordList"></div>
+</body>
+</html>
